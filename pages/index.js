@@ -41,7 +41,7 @@ const Home = () => {
     <main className={"w-screen min-h-screen"}>
       <div
         className={
-          "fixed right-1 top-1 text-2xl text-white bg-black p-2 flex gap-2"
+          "fixed right-1 top-1 z-10 text-2xl text-white bg-black p-2 flex gap-2"
         }
       >
         <SortBy value={sortByType} onChange={setSortByType} />
