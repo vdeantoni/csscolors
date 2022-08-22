@@ -17,9 +17,7 @@ const SortBy = ({ value, onChange }) => {
   return (
     <button
       className={"w-8"}
-      onClick={() =>
-        onChange((current) => (current + 1) % Object.keys(SORT_BY_TYPE).length)
-      }
+      onClick={() => onChange((current) => (current + 1) % Object.keys(SORT_BY_TYPE).length)}
       title={"Sort by"}
     >
       <FontAwesomeIcon

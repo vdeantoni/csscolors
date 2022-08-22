@@ -32,15 +32,7 @@ const Color = ({ color }) => {
         {color}
       </span>
 
-      {copied && (
-        <div
-          className={
-            "absolute bottom-2 bg-black text-white py-1 px-3 text-xs rounded"
-          }
-        >
-          Copied!
-        </div>
-      )}
+      {copied && <div className={"absolute bottom-2 bg-black text-white py-1 px-3 text-xs rounded"}>Copied!</div>}
     </div>
   );
 };
