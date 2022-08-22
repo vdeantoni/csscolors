@@ -8,6 +8,7 @@ const MadeBy = () => {
         title="Made by vdeantoni.com"
         href="http://vdeantoni.com"
         target="_blank"
+        rel="noreferrer"
       >
         <img className="w-10 h-10" src="/vdeantoni.png" alt="vdeantoni.com" />
       </a>
