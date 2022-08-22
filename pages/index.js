@@ -7,9 +7,16 @@ import GroupBy, { GROUP_BY_TYPE } from "../components/GroupBy";
 import MadeBy from "../components/MadeBy";
 import SortBy, { SORT_BY_TYPE } from "../components/SortBy";
 import { COLORS } from "../utils/colors";
-import cn from "classnames";
 
-const Home = () => {
+export async function getStaticProps(context) {
+  return {
+    props: {
+      COLORS,
+    }, // will be passed to the page component as props
+  };
+}
+
+const Home = ({ COLORS }) => {
   const [sortByType, setSortByType] = useState(SORT_BY_TYPE.AZ);
   const [groupByType, setGroupByType] = useState(GROUP_BY_TYPE.NONE);
 
@@ -44,7 +51,7 @@ const Home = () => {
         setGroups(groupBy(colors, "group"));
         break;
     }
-  }, [sortByType, groupByType]);
+  }, [COLORS, sortByType, groupByType]);
 
   return (
     <main className={"w-screen min-h-screen"}>
