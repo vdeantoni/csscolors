@@ -9,7 +9,7 @@ export const GROUP_BY_TYPE = {
 const GroupBy = ({ value, onChange }) => {
   return (
     <button
-      className={"w-8"}
+      className={"w-8 duration opacity-90 hover:opacity-100"}
       onClick={() => onChange((current) => (current + 1) % Object.keys(GROUP_BY_TYPE).length)}
       title={"Group by"}
     >
