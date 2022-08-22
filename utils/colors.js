@@ -111,7 +111,7 @@ export const COLORS = {
   Chocolate: { name: "Chocolate", hex: "D2691E", group: "Browns" },
   SaddleBrown: { name: "SaddleBrown", hex: "8B4513", group: "Browns" },
   Sienna: { name: "Sienna", hex: "A0522D", group: "Browns" },
-  Brown: { name: "Brown", hex: "A52A2A", group: "Brown" },
+  Brown: { name: "Brown", hex: "A52A2A", group: "Browns" },
   Maroon: { name: "Maroon", hex: "800000", group: "Browns" },
   White: { name: "White", hex: "FFFFFF", group: "Whites" },
   Snow: { name: "Snow", hex: "FFFAFA", group: "Whites" },

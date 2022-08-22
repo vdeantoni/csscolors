@@ -1,11 +1,4 @@
-import {
-  faCopy,
-  faObjectGroup,
-  faObjectUngroup,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import { GROUP_BY_TYPE } from "./GroupBy";
 
 const Color = ({ color }) => {
   const [copied, setCopied] = useState(false);
@@ -42,7 +35,7 @@ const Color = ({ color }) => {
       {copied && (
         <div
           className={
-            "absolute bottom-2 bg-black text-white p-2 text-xs rounded"
+            "absolute bottom-2 bg-black text-white py-1 px-3 text-xs rounded"
           }
         >
           Copied!
