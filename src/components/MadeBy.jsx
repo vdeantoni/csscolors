@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import vdeantoni from "../public/vdeantoni.png";
+import vdeantoni from "../../public/vdeantoni.png";
 
 const MadeBy = () => {
   return (

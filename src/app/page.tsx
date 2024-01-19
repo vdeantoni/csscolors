@@ -1,3 +1,5 @@
+"use client";
+
 import convert from "color-convert";
 import { groupBy, sortBy } from "lodash/collection";
 import { useEffect, useState } from "react";
@@ -8,15 +10,7 @@ import MadeBy from "../components/MadeBy";
 import SortBy, { SORT_BY_TYPE } from "../components/SortBy";
 import { COLORS } from "../utils/colors";
 
-export async function getStaticProps(context) {
-  return {
-    props: {
-      COLORS,
-    },
-  };
-}
-
-const Home = ({ COLORS }) => {
+export default function Home() {
   const [sortByType, setSortByType] = useState(SORT_BY_TYPE.AZ);
   const [groupByType, setGroupByType] = useState(GROUP_BY_TYPE.NONE);
 
@@ -77,6 +71,4 @@ const Home = ({ COLORS }) => {
       <MadeBy />
     </main>
   );
-};
-
-export default Home;
+}
