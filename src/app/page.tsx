@@ -1,8 +1,8 @@
 "use client";
 
-import convert from "color-convert";
+import color from "color";
 import { groupBy, sortBy } from "lodash";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Color from "../components/Color";
 import ColorHeader from "../components/ColorHeader";
 import GroupBy, { GROUP_BY_TYPE } from "../components/GroupBy";
@@ -26,7 +26,12 @@ export default function Home() {
         break;
       case SORT_BY_TYPE.LD:
       case SORT_BY_TYPE.DL:
-        colors = sortBy(Object.values(COLORS), (c) => convert.hex.rgb(c.hex).reduce((a, c) => a + c, 0));
+        colors = sortBy(Object.values(COLORS), (c) =>
+          color(`#${c.hex}`)
+            .rgb()
+            .array()
+            .reduce((a, c) => a + c, 0)
+        );
         break;
     }
 
