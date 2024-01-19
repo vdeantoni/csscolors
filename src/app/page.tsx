@@ -1,7 +1,7 @@
 "use client";
 
 import convert from "color-convert";
-import { groupBy, sortBy } from "lodash/collection";
+import { groupBy, sortBy } from "lodash";
 import { useEffect, useState } from "react";
 import Color from "../components/Color";
 import ColorHeader from "../components/ColorHeader";
@@ -17,7 +17,7 @@ export default function Home() {
   const [groups, setGroups] = useState({});
 
   useEffect(() => {
-    let colors = [];
+    let colors: any[] = [];
 
     switch (sortByType) {
       case SORT_BY_TYPE.AZ:
@@ -45,7 +45,7 @@ export default function Home() {
         setGroups(groupBy(colors, "group"));
         break;
     }
-  }, [COLORS, sortByType, groupByType]);
+  }, [sortByType, groupByType]);
 
   return (
     <main className={"w-screen min-h-screen"}>
@@ -54,7 +54,7 @@ export default function Home() {
         <GroupBy value={groupByType} onChange={setGroupByType} />
       </div>
 
-      {sortBy(Object.entries(groups), ([groupName]) => groupName).map(([groupName, groupColors]) => (
+      {sortBy(Object.entries(groups), ([groupName]) => groupName).map(([groupName, groupColors]: [string, any]) => (
         <section key={groupName}>
           {groupName !== "All" && <ColorHeader name={groupName} />}
           <div
@@ -62,7 +62,7 @@ export default function Home() {
               "grid grid-cols-3 md:grid-cols-6 lg:grid-cols-8 xl:md:grid-cols-10 2xl:md:grid-cols-12 auto-rows-fr"
             }
           >
-            {groupColors.map((color) => (
+            {groupColors.map((color: any) => (
               <Color key={color.name} color={color} />
             ))}
           </div>
