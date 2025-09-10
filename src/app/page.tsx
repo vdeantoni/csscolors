@@ -30,7 +30,7 @@ export default function Home() {
           color(`#${c.hex}`)
             .rgb()
             .array()
-            .reduce((a, c) => a + c, 0)
+            .reduce((a, c) => a + c, 0),
         );
         break;
     }

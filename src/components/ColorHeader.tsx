@@ -1,6 +1,6 @@
 import cn from "classnames";
 
-const GRADIENT_MAP = {
+const GRADIENT_MAP: Record<string, [string, string]> = {
   Blues: ["from-[LightBlue]", "to-[Navy]"],
   Browns: ["from-[BlanchedAlmond]", "to-[Maroon]"],
   Grays: ["from-[Gainsboro]", "to-[Black]"],
@@ -13,7 +13,11 @@ const GRADIENT_MAP = {
   Yellows: ["from-[Khaki]", "to-[Gold]"],
 };
 
-const ColorHeader = ({ name }) => {
+interface ColorHeaderProps {
+  name: string;
+}
+
+const ColorHeader = ({ name }: ColorHeaderProps) => {
   return (
     <h2
       className={`text-3xl pl-2 uppercase tracking-wide w-min font-bold bg-clip-text text-transparent bg-gradient-to-r 

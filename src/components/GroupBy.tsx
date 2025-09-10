@@ -1,12 +1,17 @@
 import { faObjectGroup, faObjectUngroup } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export const GROUP_BY_TYPE = {
-  NONE: 0,
-  COLOR_GROUP: 1,
-};
+export enum GROUP_BY_TYPE {
+  NONE = 0,
+  COLOR_GROUP = 1,
+}
 
-const GroupBy = ({ value, onChange }) => {
+interface GroupByProps {
+  value: number;
+  onChange: (updater: (current: number) => number) => void;
+}
+
+const GroupBy = ({ value, onChange }: GroupByProps) => {
   return (
     <button
       className={"w-8 duration opacity-90 hover:opacity-100"}
