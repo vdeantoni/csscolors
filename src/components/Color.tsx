@@ -1,7 +1,14 @@
 import cn from "classnames";
 import color from "color";
 
-const Color = ({ color: { name, hex } }) => {
+interface ColorProps {
+  color: {
+    name: string;
+    hex: string;
+  };
+}
+
+const Color = ({ color: { name, hex } }: ColorProps) => {
   return (
     <div
       className={cn(
