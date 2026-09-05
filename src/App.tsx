@@ -1,4 +1,3 @@
-import color from "color";
 import { useMemo, useState } from "react";
 import Color from "./components/Color";
 import ColorHeader from "./components/ColorHeader";
@@ -6,22 +5,17 @@ import GroupBy from "./components/GroupBy";
 import MadeBy from "./components/MadeBy";
 import SortBy from "./components/SortBy";
 import { groupBy, sortBy } from "./utils/collections";
+import { lightness, spectrumRank, type ColorEntry } from "./utils/colorMetrics";
 import { COLORS } from "./utils/colors";
 import { GROUP_BY_TYPES, SORT_BY_TYPES, type GroupByType, type SortByType } from "./utils/modes";
-
-type ColorEntry = (typeof COLORS)[keyof typeof COLORS];
-
-const brightness = (c: ColorEntry) =>
-  color(`#${c.hex}`)
-    .rgb()
-    .array()
-    .reduce((a, v) => a + v, 0);
 
 const SORTS: Record<SortByType, { key: (c: ColorEntry) => string | number; reverse: boolean }> = {
   AZ: { key: (c) => c.name, reverse: false },
   ZA: { key: (c) => c.name, reverse: true },
-  LD: { key: brightness, reverse: true },
-  DL: { key: brightness, reverse: false },
+  LD: { key: lightness, reverse: true },
+  DL: { key: lightness, reverse: false },
+  HUE: { key: spectrumRank, reverse: false },
+  HUE_REV: { key: spectrumRank, reverse: true },
 };
 
 const GROUPERS: Record<GroupByType, (c: ColorEntry) => string> = {

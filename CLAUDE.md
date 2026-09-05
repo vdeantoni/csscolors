@@ -48,8 +48,23 @@ swatch and the label it displays will silently disagree too.
 new group to `colors.js` requires adding the matching entry here**, otherwise the heading renders as
 transparent text with no gradient behind it.
 
-Sorting by "lightness" (`LD` / `DL`) sums the raw R+G+B channels. It is not perceptual luminance, so
-saturated blues sort as very dark.
+## Sorting
+
+`src/utils/colorMetrics.ts` holds the color math. Everything reads LCH off the `color` package, which is
+CIELAB in polar form, so lightness, chroma, and hue all come from one conversion.
+
+`lightness` is CIE L*. Do not go back to summing R+G+B: that weights the channels equally, so it ranks pure
+green as darker than navy, which is backwards. Note the `color` package's own `.lightness()` is HSL lightness,
+a different and non-perceptual number.
+
+`spectrumRank` is what clusters similar colors. It buckets hue into 12 bands and orders by lightness inside
+each band, so a family reads as one dark-to-light ramp. Colors with LAB chroma under 12 get band -1 and lead,
+because a near-grey's hue angle is numerical noise and would otherwise scatter them across the spectrum. The
+rank encodes both parts as `band * 1000 + lightness`, which stays ordered only because lightness tops out at
+100; widening the lightness range means widening that multiplier.
+
+The band count and the chroma cutoff are the two knobs worth touching. Twelve bands split the 141 named
+colors into families of 4 to 18; fewer bands merge families that read as distinct, more bands fragment them.
 
 ## Tailwind v4
 
@@ -71,7 +86,7 @@ The sort and group modes live in `src/utils/modes.ts` as `as const` arrays, each
 the array:
 
 ```ts
-export const SORT_BY_TYPES = ["AZ", "ZA", "LD", "DL"] as const;
+export const SORT_BY_TYPES = ["AZ", "ZA", "LD", "DL", "HUE", "HUE_REV"] as const;
 export type SortByType = (typeof SORT_BY_TYPES)[number];
 ```
 
@@ -79,9 +94,12 @@ The array is the single source of truth. Declaration order is click order, and `
 `src/utils/cycle.ts` advances one step per click and wraps.
 
 `App.tsx` keys behavior off these modes through `Record`-typed lookups (`SORTS`, `GROUPERS`), and `SortBy.tsx`
-picks its icon the same way. Adding a mode to the array is therefore a compile error until you supply its
-sort key, grouper, and icon. Keep it that way: a `switch` over the modes would silently fall through on a new
-one and blank the grid.
+does the same in its `MODES` table for the icon and tooltip. Adding a mode to the array is therefore a compile
+error until you supply its sort key, grouper, icon, and label. Keep it that way: a `switch` over the modes
+would silently fall through on a new one and blank the grid.
+
+One button cycles all six sort modes, so the tooltip and `aria-label` name the current mode rather than
+saying "Sort by". An unlabelled six-state toggle is not discoverable.
 
 Do not convert these to TypeScript `enum`s. Numeric enums carry a runtime reverse mapping, which makes
 `Object.keys`/`Object.values` return twice the member count and breaks any modulo-based cycling built on them.
