@@ -2,54 +2,47 @@
 
 import color from "color";
 import { groupBy, sortBy } from "lodash";
-import React, { useEffect, useState } from "react";
+import React, { useMemo, useState } from "react";
 import Color from "../components/Color";
 import ColorHeader from "../components/ColorHeader";
-import GroupBy, { GROUP_BY_TYPE } from "../components/GroupBy";
+import GroupBy, { GROUP_BY_TYPES, type GroupByType } from "../components/GroupBy";
 import MadeBy from "../components/MadeBy";
-import SortBy, { SORT_BY_TYPE } from "../components/SortBy";
+import SortBy, { SORT_BY_TYPES, type SortByType } from "../components/SortBy";
 import { COLORS } from "../utils/colors";
 
+type ColorEntry = (typeof COLORS)[keyof typeof COLORS];
+
+const brightness = (c: ColorEntry) =>
+  color(`#${c.hex}`)
+    .rgb()
+    .array()
+    .reduce((a, v) => a + v, 0);
+
+const SORTS: Record<SortByType, { key: (c: ColorEntry) => string | number; reverse: boolean }> = {
+  AZ: { key: (c) => c.name, reverse: false },
+  ZA: { key: (c) => c.name, reverse: true },
+  LD: { key: brightness, reverse: true },
+  DL: { key: brightness, reverse: false },
+};
+
+const GROUPERS: Record<GroupByType, (c: ColorEntry) => string> = {
+  NONE: () => "All",
+  COLOR_GROUP: (c) => c.group,
+};
+
 export default function Home() {
-  const [sortByType, setSortByType] = useState(SORT_BY_TYPE.AZ);
-  const [groupByType, setGroupByType] = useState(GROUP_BY_TYPE.NONE);
+  const [sortByType, setSortByType] = useState<SortByType>(SORT_BY_TYPES[0]);
+  const [groupByType, setGroupByType] = useState<GroupByType>(GROUP_BY_TYPES[0]);
 
-  const [groups, setGroups] = useState({});
+  const groups = useMemo(() => {
+    const { key, reverse } = SORTS[sortByType];
+    const colors = sortBy(Object.values(COLORS), key);
 
-  useEffect(() => {
-    let colors: any[] = [];
-
-    switch (sortByType) {
-      case SORT_BY_TYPE.AZ:
-      case SORT_BY_TYPE.ZA:
-        colors = sortBy(Object.values(COLORS), "name");
-        break;
-      case SORT_BY_TYPE.LD:
-      case SORT_BY_TYPE.DL:
-        colors = sortBy(Object.values(COLORS), (c) =>
-          color(`#${c.hex}`)
-            .rgb()
-            .array()
-            .reduce((a, c) => a + c, 0),
-        );
-        break;
+    if (reverse) {
+      colors.reverse();
     }
 
-    switch (sortByType) {
-      case SORT_BY_TYPE.ZA:
-      case SORT_BY_TYPE.LD:
-        colors = colors.reverse();
-        break;
-    }
-
-    switch (groupByType) {
-      case GROUP_BY_TYPE.NONE:
-        setGroups(groupBy(colors, () => "All"));
-        break;
-      case GROUP_BY_TYPE.COLOR_GROUP:
-        setGroups(groupBy(colors, "group"));
-        break;
-    }
+    return groupBy(colors, GROUPERS[groupByType]);
   }, [sortByType, groupByType]);
 
   return (
@@ -59,7 +52,7 @@ export default function Home() {
         <GroupBy value={groupByType} onChange={setGroupByType} />
       </div>
 
-      {sortBy(Object.entries(groups), ([groupName]) => groupName).map(([groupName, groupColors]: [string, any]) => (
+      {sortBy(Object.entries(groups), ([groupName]) => groupName).map(([groupName, groupColors]) => (
         <section key={groupName}>
           {groupName !== "All" && <ColorHeader name={groupName} />}
           <div
@@ -67,7 +60,7 @@ export default function Home() {
               "grid grid-cols-3 md:grid-cols-6 lg:grid-cols-8 xl:md:grid-cols-10 2xl:md:grid-cols-12 auto-rows-fr"
             }
           >
-            {groupColors.map((color: any) => (
+            {groupColors.map((color) => (
               <Color key={color.name} color={color} />
             ))}
           </div>
