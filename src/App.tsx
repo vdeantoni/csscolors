@@ -1,14 +1,13 @@
-"use client";
-
 import color from "color";
-import { groupBy, sortBy } from "lodash";
-import React, { useMemo, useState } from "react";
-import Color from "../components/Color";
-import ColorHeader from "../components/ColorHeader";
-import GroupBy, { GROUP_BY_TYPES, type GroupByType } from "../components/GroupBy";
-import MadeBy from "../components/MadeBy";
-import SortBy, { SORT_BY_TYPES, type SortByType } from "../components/SortBy";
-import { COLORS } from "../utils/colors";
+import { useMemo, useState } from "react";
+import Color from "./components/Color";
+import ColorHeader from "./components/ColorHeader";
+import GroupBy from "./components/GroupBy";
+import MadeBy from "./components/MadeBy";
+import SortBy from "./components/SortBy";
+import { groupBy, sortBy } from "./utils/collections";
+import { COLORS } from "./utils/colors";
+import { GROUP_BY_TYPES, SORT_BY_TYPES, type GroupByType, type SortByType } from "./utils/modes";
 
 type ColorEntry = (typeof COLORS)[keyof typeof COLORS];
 
@@ -30,7 +29,7 @@ const GROUPERS: Record<GroupByType, (c: ColorEntry) => string> = {
   COLOR_GROUP: (c) => c.group,
 };
 
-export default function Home() {
+export default function App() {
   const [sortByType, setSortByType] = useState<SortByType>(SORT_BY_TYPES[0]);
   const [groupByType, setGroupByType] = useState<GroupByType>(GROUP_BY_TYPES[0]);
 

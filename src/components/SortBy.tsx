@@ -7,9 +7,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { nextInCycle } from "../utils/cycle";
-
-export const SORT_BY_TYPES = ["AZ", "ZA", "LD", "DL"] as const;
-export type SortByType = (typeof SORT_BY_TYPES)[number];
+import { SORT_BY_TYPES, type SortByType } from "../utils/modes";
 
 const ICONS: Record<SortByType, IconDefinition> = {
   AZ: faArrowDownAZ,
