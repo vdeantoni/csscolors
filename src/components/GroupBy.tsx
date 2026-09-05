@@ -1,9 +1,7 @@
 import { faObjectGroup, faObjectUngroup } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { nextInCycle } from "../utils/cycle";
-
-export const GROUP_BY_TYPES = ["NONE", "COLOR_GROUP"] as const;
-export type GroupByType = (typeof GROUP_BY_TYPES)[number];
+import { GROUP_BY_TYPES, type GroupByType } from "../utils/modes";
 
 interface GroupByProps {
   value: GroupByType;

@@ -4,57 +4,71 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-A single-page Next.js App Router app that renders the CSS named colors as a grid of swatches, with client-side
-sort and group controls. Deployed to Vercel (`@vercel/analytics` is wired into the root layout).
+A single-page Vite + React app that renders the CSS named colors as a grid of swatches, with client-side
+sort and group controls. There is no router and no server: `index.html` boots `src/main.tsx`, which mounts
+`src/App.tsx`. Deployed to Vercel as a static SPA out of `dist/`.
 
 ## Commands
 
-Package manager is pnpm (`pnpm-lock.yaml`).
+Package manager is pnpm. Node must satisfy `^20.19.0 || >=22.12.0` (Vite 8).
 
 ```
-pnpm dev     # dev server on port 1112, not 3000
-pnpm build
-pnpm start
-pnpm lint    # next lint
+pnpm dev      # dev server on port 1112
+pnpm build    # tsc -b && vite build  -> dist/
+pnpm preview  # serve the built output on 1112
+pnpm lint     # eslint .
 ```
 
 There is no test suite and no test runner installed. There is also no `format` script, and prettier is not a
 dependency, so `.prettierrc` (printWidth 120) only applies if your editor picks it up.
 
-`.codesandbox/tasks.json` claims the dev preview is on port 3000. It is wrong; `pnpm dev` hardcodes `PORT=1112`.
+`pnpm build` typechecks first via `tsc -b`, so a type error fails the build. `npx tsc -b` alone is the fast
+way to typecheck without bundling.
 
 ## Architecture
 
 `src/utils/colors.js` is the single source of truth: a `COLORS` object keyed by color name, each entry
-`{ name, hex, group }`. It is the only `.js` file in the source tree (`allowJs` is on); everything else is `.tsx`.
+`{ name, hex, group }`. It is the only `.js` file in the source tree (`allowJs` is on); everything else is
+`.ts`/`.tsx`. `App.tsx` derives `ColorEntry` from it with `(typeof COLORS)[keyof typeof COLORS]`, so the
+whole chain stays typed without a hand-written interface.
 
-`src/app/page.tsx` is the only page and is a client component. It holds two pieces of state, `sortByType` and
-`groupByType`, and derives a `groups` record from them. Everything below it is presentational.
+`src/App.tsx` holds the two pieces of state (`sortByType`, `groupByType`) and derives the grouped, sorted
+colors from them in a `useMemo`. Everything below it is presentational.
 
-`src/components/Color.tsx` paints a swatch by setting `backgroundColor` to the color's **name**, not its hex. The
-hex in `COLORS` is used only for the hover labels and to pick black or white text via `color(...).contrast(black) < 5.5`.
-If a hex in `colors.js` disagrees with the real CSS named color, the swatch and the label it displays will silently
-disagree too.
+`sortBy` and `groupBy` live in `src/utils/collections.ts` rather than coming from lodash. lodash is CJS and
+does not tree-shake, so importing those two functions cost ~26 kB gzip for ~10 lines of behavior. `sortBy`
+computes its key once per item, not once per comparison, since the lightness key builds a `Color` object.
 
-`src/components/ColorHeader.tsx` maps a group name to a Tailwind gradient pair via `GRADIENT_MAP`. **Adding a new
-group to `colors.js` requires adding the matching entry here**, otherwise the heading renders as transparent text
-with no gradient behind it.
+`src/components/Color.tsx` paints a swatch by setting `backgroundColor` to the color's **name**, not its hex.
+The hex in `COLORS` is used only for the hover labels and to pick black or white text via
+`color(...).contrast(black) < 5.5`. If a hex in `colors.js` disagrees with the real CSS named color, the
+swatch and the label it displays will silently disagree too.
+
+`src/components/ColorHeader.tsx` maps a group name to a Tailwind gradient pair via `GRADIENT_MAP`. **Adding a
+new group to `colors.js` requires adding the matching entry here**, otherwise the heading renders as
+transparent text with no gradient behind it.
 
 Sorting by "lightness" (`LD` / `DL`) sums the raw R+G+B channels. It is not perceptual luminance, so
 saturated blues sort as very dark.
 
 ## Tailwind v4
 
-Tailwind is v4, configured entirely from `src/styles/globals.css` (`@import "tailwindcss"`) through
-`@tailwindcss/postcss`. `tailwind.config.ts` is a leftover from v3: nothing references it with `@config`, so its
-`content` globs are dead and editing them changes nothing. v4 auto-discovers sources instead.
+Tailwind v4 is wired through the `@tailwindcss/vite` plugin, not PostCSS. There is no `tailwind.config.ts`
+and no `postcss.config.js`; all configuration lives in `src/styles/globals.css` via `@import "tailwindcss"`
+and an `@theme` block. v4 auto-discovers source files.
 
 Class names must appear as complete literal strings for the scanner to find them. `GRADIENT_MAP` stores full
 classes like `"from-[LightBlue]"` for exactly this reason. Do not build class names by concatenation.
 
+The Inter font is self-hosted through `@fontsource-variable/inter`, but `src/styles/globals.css` declares the
+`@font-face` by hand against the latin `.woff2` rather than importing the package entry, which would ship seven
+language subsets. `--font-sans` in the `@theme` block points at it. Keep it self-hosted: fetching from Google
+Fonts at build time breaks on networks that block `fonts.gstatic.com`.
+
 ## Control pattern
 
-The sort and group modes are `as const` string arrays, each with its type derived from the array:
+The sort and group modes live in `src/utils/modes.ts` as `as const` arrays, each with its type derived from
+the array:
 
 ```ts
 export const SORT_BY_TYPES = ["AZ", "ZA", "LD", "DL"] as const;
@@ -64,15 +78,22 @@ export type SortByType = (typeof SORT_BY_TYPES)[number];
 The array is the single source of truth. Declaration order is click order, and `nextInCycle` in
 `src/utils/cycle.ts` advances one step per click and wraps.
 
-`page.tsx` keys behavior off these modes through `Record`-typed lookups (`SORTS`, `GROUPERS`) rather than
-`switch`. Adding a mode to the array is therefore a compile error until you supply its sort key and grouper.
-Keep it that way: a `switch` over the modes would silently fall through on a new one and blank the grid.
+`App.tsx` keys behavior off these modes through `Record`-typed lookups (`SORTS`, `GROUPERS`), and `SortBy.tsx`
+picks its icon the same way. Adding a mode to the array is therefore a compile error until you supply its
+sort key, grouper, and icon. Keep it that way: a `switch` over the modes would silently fall through on a new
+one and blank the grid.
 
 Do not convert these to TypeScript `enum`s. Numeric enums carry a runtime reverse mapping, which makes
 `Object.keys`/`Object.values` return twice the member count and breaks any modulo-based cycling built on them.
+`erasableSyntaxOnly` in `tsconfig.app.json` rejects `enum` outright.
+
+The modes deliberately live outside the component files. `eslint-plugin-react-refresh` errors if a component
+file also exports constants, since that breaks fast refresh.
 
 ## Conventions
 
-- Path alias `@/*` maps to `./src/*` in `tsconfig.json`, but all current imports are relative. Match the file
-  you are editing.
-- Components are arrow functions with a typed props interface and a default export.
+- Path alias `@/*` maps to `./src/*` in both `tsconfig.app.json` and `vite.config.ts`, but all current
+  imports are relative. Match the file you are editing.
+- Components are arrow functions with a typed props interface and a default export. `App` is the one
+  exception, a function declaration, since it is the root.
+- `verbatimModuleSyntax` is on, so type-only imports must be written `import { type Foo }` or `import type`.
