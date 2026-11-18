@@ -1,6 +1,7 @@
 import cn from "classnames";
+import { type ColorGroup } from "../../src/index.js";
 
-const GRADIENT_MAP: Record<string, [string, string]> = {
+const GRADIENT_MAP: Record<ColorGroup, [string, string]> = {
   Blues: ["from-[LightBlue]", "to-[Navy]"],
   Browns: ["from-[BlanchedAlmond]", "to-[Maroon]"],
   Grays: ["from-[Gainsboro]", "to-[Black]"],
@@ -14,7 +15,7 @@ const GRADIENT_MAP: Record<string, [string, string]> = {
 };
 
 interface ColorHeaderProps {
-  name: string;
+  name: ColorGroup;
 }
 
 const ColorHeader = ({ name }: ColorHeaderProps) => {
