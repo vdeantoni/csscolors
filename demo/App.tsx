@@ -4,9 +4,9 @@ import ColorHeader from "./components/ColorHeader";
 import GroupBy from "./components/GroupBy";
 import MadeBy from "./components/MadeBy";
 import SortBy from "./components/SortBy";
-import { groupBy, sortBy } from "./utils/collections";
-import { lightness, spectrumRank, type ColorEntry } from "./utils/colorMetrics";
-import { COLORS } from "./utils/colors";
+import { groupBy, sortBy } from "../src/collections.js";
+import { lightness, spectrumRank, type ColorEntry } from "../src/metrics.js";
+import { COLORS } from "../src/colors.js";
 import { GROUP_BY_TYPES, SORT_BY_TYPES, type GroupByType, type SortByType } from "./utils/modes";
 
 const SORTS: Record<SortByType, { key: (c: ColorEntry) => string | number; reverse: boolean }> = {

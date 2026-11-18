@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { sortBy } from "./collections";
-import { lightness, spectrumRank, type ColorEntry } from "./colorMetrics";
-import { COLORS } from "./colors";
+import { sortBy } from "./collections.js";
+import { lightness, spectrumRank, type ColorEntry } from "./metrics.js";
+import { COLORS } from "./colors.js";
 
 const sortNames = (key: (c: ColorEntry) => string | number, reverse = false) => {
   const sorted = sortBy(Object.values(COLORS), key).map((c) => c.name);
