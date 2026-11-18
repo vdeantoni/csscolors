@@ -4,23 +4,33 @@ import ColorHeader from "./components/ColorHeader";
 import GroupBy from "./components/GroupBy";
 import MadeBy from "./components/MadeBy";
 import SortBy from "./components/SortBy";
-import { groupBy, sortBy } from "../src/collections.js";
-import { lightness, spectrumRank, type ColorEntry } from "../src/metrics.js";
-import { COLORS } from "../src/colors.js";
+import {
+  byLightness,
+  byName,
+  bySpectrum,
+  COLORS,
+  groupColors,
+  sortColors,
+  type ColorGroup,
+  type CssColor,
+} from "../src/index.js";
 import { GROUP_BY_TYPES, SORT_BY_TYPES, type GroupByType, type SortByType } from "./utils/modes";
 
-const SORTS: Record<SortByType, { key: (c: ColorEntry) => string | number; reverse: boolean }> = {
-  AZ: { key: (c) => c.name, reverse: false },
-  ZA: { key: (c) => c.name, reverse: true },
-  LD: { key: lightness, reverse: true },
-  DL: { key: lightness, reverse: false },
-  HUE: { key: spectrumRank, reverse: false },
-  HUE_REV: { key: spectrumRank, reverse: true },
+const ALL_COLORS = Object.values(COLORS);
+const spectrum = bySpectrum();
+
+const SORTS: Record<SortByType, { key: (c: CssColor) => string | number; reverse: boolean }> = {
+  AZ: { key: byName, reverse: false },
+  ZA: { key: byName, reverse: true },
+  LD: { key: byLightness, reverse: true },
+  DL: { key: byLightness, reverse: false },
+  HUE: { key: spectrum, reverse: false },
+  HUE_REV: { key: spectrum, reverse: true },
 };
 
-const GROUPERS: Record<GroupByType, (c: ColorEntry) => string> = {
-  NONE: () => "All",
-  COLOR_GROUP: (c) => c.group,
+const GROUPERS: Record<GroupByType, (colors: CssColor[]) => { group: ColorGroup | null; colors: CssColor[] }[]> = {
+  NONE: (colors) => [{ group: null, colors }],
+  COLOR_GROUP: groupColors,
 };
 
 export default function App() {
@@ -29,13 +39,7 @@ export default function App() {
 
   const groups = useMemo(() => {
     const { key, reverse } = SORTS[sortByType];
-    const colors = sortBy(Object.values(COLORS), key);
-
-    if (reverse) {
-      colors.reverse();
-    }
-
-    return groupBy(colors, GROUPERS[groupByType]);
+    return GROUPERS[groupByType](sortColors(ALL_COLORS, key, { reverse }));
   }, [sortByType, groupByType]);
 
   return (
@@ -45,15 +49,15 @@ export default function App() {
         <GroupBy value={groupByType} onChange={setGroupByType} />
       </div>
 
-      {sortBy(Object.entries(groups), ([groupName]) => groupName).map(([groupName, groupColors]) => (
-        <section key={groupName}>
-          {groupName !== "All" && <ColorHeader name={groupName} />}
+      {groups.map(({ group, colors }) => (
+        <section key={group ?? "All"}>
+          {group && <ColorHeader name={group} />}
           <div
             className={
               "grid grid-cols-3 md:grid-cols-6 lg:grid-cols-8 xl:md:grid-cols-10 2xl:md:grid-cols-12 auto-rows-fr"
             }
           >
-            {groupColors.map((color) => (
+            {colors.map((color) => (
               <Color key={color.name} color={color} />
             ))}
           </div>
