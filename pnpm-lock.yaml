@@ -7,7 +7,10 @@ settings:
 importers:
 
   .:
-    dependencies:
+    devDependencies:
+      '@eslint/js':
+        specifier: ^10.0.1
+        version: 10.0.1(eslint@10.10.0(jiti@2.7.0))
       '@fontsource-variable/inter':
         specifier: ^5.3.0
         version: 5.3.0
@@ -20,25 +23,6 @@ importers:
       '@fortawesome/react-fontawesome':
         specifier: ^3.5.0
         version: 3.5.0(@fortawesome/fontawesome-svg-core@7.3.1)(react@19.2.8)
-      '@vercel/analytics':
-        specifier: ^2.0.1
-        version: 2.0.1(react@19.2.8)
-      classnames:
-        specifier: ^2.5.1
-        version: 2.5.1
-      color:
-        specifier: ^5.0.3
-        version: 5.0.3
-      react:
-        specifier: ^19.2.8
-        version: 19.2.8
-      react-dom:
-        specifier: ^19.2.8
-        version: 19.2.8(react@19.2.8)
-    devDependencies:
-      '@eslint/js':
-        specifier: ^10.0.1
-        version: 10.0.1(eslint@10.10.0(jiti@2.7.0))
       '@tailwindcss/vite':
         specifier: ^4.3.3
         version: 4.3.3(vite@8.2.2(@types/node@26.4.1)(jiti@2.7.0))
@@ -54,9 +38,18 @@ importers:
       '@types/react-dom':
         specifier: ^19.2.7
         version: 19.2.7(@types/react@19.2.18)
+      '@vercel/analytics':
+        specifier: ^2.0.1
+        version: 2.0.1(react@19.2.8)
       '@vitejs/plugin-react':
         specifier: ^6.1.1
         version: 6.1.1(vite@8.2.2(@types/node@26.4.1)(jiti@2.7.0))
+      classnames:
+        specifier: ^2.5.1
+        version: 2.5.1
+      color:
+        specifier: ^5.0.3
+        version: 5.0.3
       color-name:
         specifier: ^2.0.0
         version: 2.0.0
@@ -72,6 +65,12 @@ importers:
       globals:
         specifier: ^17.12.0
         version: 17.12.0
+      react:
+        specifier: ^19.2.8
+        version: 19.2.8
+      react-dom:
+        specifier: ^19.2.8
+        version: 19.2.8(react@19.2.8)
       tailwindcss:
         specifier: ^4.3.3
         version: 4.3.3
