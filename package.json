@@ -1,6 +1,6 @@
 {
   "name": "@vdeantoni/csscolors",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "The 141 CSS named colors grouped into families, with sorting by name, perceptual lightness and spectrum",
   "keywords": [
     "color",
@@ -21,7 +21,7 @@
   "bugs": {
     "url": "https://github.com/vdeantoni/csscolors/issues"
   },
-  "homepage": "https://csscolors.dev",
+  "homepage": "https://csscolors.vercel.app",
   "type": "module",
   "sideEffects": false,
   "exports": {

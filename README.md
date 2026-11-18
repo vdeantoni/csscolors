@@ -2,7 +2,7 @@
 
 The 141 CSS named colors, grouped into ten families, with sort keys for name, perceptual lightness and spectrum. The sorting and the color math work on any hex color, not only the named ones.
 
-[Live demo](https://csscolors.dev)
+[Live demo](https://csscolors.vercel.app)
 
 ## Install
 

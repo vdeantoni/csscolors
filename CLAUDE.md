@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-The repo is both the npm package `@vdeantoni/csscolors` and its demo site, csscolors.dev.
+The repo is both the npm package `@vdeantoni/csscolors` and its demo site, https://csscolors.vercel.app.
 
 - `src/` is the library: the CSS named colors as typed data, LCH color math, and sort and group helpers. It
   is published from `dist/`.
