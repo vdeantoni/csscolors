@@ -1,42 +1,77 @@
 {
-  "name": "csscolors",
+  "name": "@vdeantoni/csscolors",
   "version": "0.1.0",
-  "private": true,
+  "description": "The 141 CSS named colors grouped into families, with sorting by name, perceptual lightness and spectrum",
+  "keywords": [
+    "color",
+    "colors",
+    "css",
+    "css-colors",
+    "named-colors",
+    "palette",
+    "sort",
+    "lch"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vdeantoni/csscolors.git"
+  },
+  "author": "Vinicius De Antoni <vdeantoni@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vdeantoni/csscolors/issues"
+  },
+  "homepage": "https://csscolors.dev",
   "type": "module",
-  "engines": {
-    "node": "^20.19.0 || >=22.12.0"
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "build:demo": "tsc -b && vite build",
     "preview": "vite preview",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "vitest run",
+    "prepack": "pnpm build"
   },
-  "dependencies": {
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@fontsource-variable/inter": "^5.3.0",
     "@fortawesome/fontawesome-svg-core": "^7.3.1",
     "@fortawesome/free-solid-svg-icons": "^7.3.1",
     "@fortawesome/react-fontawesome": "^3.5.0",
-    "@vercel/analytics": "^2.0.1",
-    "classnames": "^2.5.1",
-    "color": "^5.0.3",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8"
-  },
-  "devDependencies": {
-    "@eslint/js": "^10.0.1",
     "@tailwindcss/vite": "^4.3.3",
+    "@types/color-name": "^2.0.0",
     "@types/node": "^26.4.1",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
+    "@vercel/analytics": "^2.0.1",
     "@vitejs/plugin-react": "^6.1.1",
+    "classnames": "^2.5.1",
+    "color": "^5.0.3",
+    "color-name": "^2.0.0",
     "eslint": "^10.10.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.6",
     "globals": "^17.12.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.69.0",
-    "vite": "^8.2.2"
+    "vite": "^8.2.2",
+    "vitest": "^5.1.0"
   }
 }
