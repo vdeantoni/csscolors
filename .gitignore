@@ -11,6 +11,7 @@
 
 # build output
 /dist
+/dist-demo
 
 # misc
 .DS_Store

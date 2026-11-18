@@ -19,7 +19,7 @@
     },
     "build": {
       "name": "build",
-      "command": "pnpm build"
+      "command": "pnpm build:demo"
     },
     "preview": {
       "name": "preview",
