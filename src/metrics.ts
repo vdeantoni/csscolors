@@ -1,5 +1,5 @@
 import color from "color";
-import { COLORS } from "./colors";
+import { COLORS } from "./colors.js";
 
 export type ColorEntry = (typeof COLORS)[keyof typeof COLORS];
 
